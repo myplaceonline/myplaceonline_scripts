@@ -1,4 +1,5 @@
 #!/bin/sh
+ssh root@myplaceonline.com "cat /root/myplaceonline.json" | grep -A 8 "\"postgresql\": {" | grep "\"myplaceonline\": "
 echo -n "psql myplaceonline user password: "
 read -s PSQL_USER_PASSWORD
 echo
