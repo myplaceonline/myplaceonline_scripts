@@ -7,7 +7,7 @@ fi
 echo "$@"
 git status && \
 git add . && \
-git commit -m "$*" && \
+git commit -m "$*"
 git push
 PARENTDIR=`dirname ${PWD}`
 while [ `basename $PARENTDIR` != "src" ]; do
