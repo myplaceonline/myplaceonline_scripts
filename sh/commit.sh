@@ -4,6 +4,10 @@ if [ $# -eq 0 ]; then
   echo "Please specify commit message"
   exit 1
 fi
+KEYSLOADED=`ssh-add -l | grep -v "The agent has no identities." | wc -l`
+if [ $KEYSLOADED -lt 1 ]; then
+  ssh-add
+fi
 echo "$@"
 git status && \
 git add . && \
