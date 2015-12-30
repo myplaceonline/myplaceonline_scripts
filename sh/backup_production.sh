@@ -14,7 +14,16 @@ if [ "${ENCRYPTED_FILE_PASSWORD}" != "${ENCRYPTED_FILE_PASSWORD2}" ]; then
   exit 1
 fi
 read -e -p "Local output directory: " OUTPUTDIR
+
+# Write to the root directory because /tmp is limited in some clouds
 OUTPUTFILE=/pgdump_myplaceonline_`date +"%Y%m%d_%H%M"`.sql
+LARGEFILES=/largefiles_myplaceonline_`date +"%Y%m%d_%H%M"`.tar.gz
+
 ssh root@myplaceonline.com "PGPASSWORD=${PSQL_USER_PASSWORD} /usr/bin/pg_dump -U myplaceonline -h localhost -d myplaceonline_production -Fc > ${OUTPUTFILE} && echo '${ENCRYPTED_FILE_PASSWORD}' | /usr/bin/gpg --batch --no-tty --passphrase-fd 0 --s2k-mode 3 --s2k-count 65536 --force-mdc --cipher-algo AES256 --s2k-digest-algo sha512 -o ${OUTPUTFILE}.pgp --symmetric ${OUTPUTFILE}; rm ${OUTPUTFILE}" && \
 scp root@myplaceonline.com:${OUTPUTFILE}.pgp ${OUTPUTDIR} && \
-ssh root@myplaceonline.com "rm -f ${OUTPUTFILE}.pgp"
+ssh root@myplaceonline.com "rm -f ${OUTPUTFILE}.pgp" && \
+ssh root@myplaceonline.com "tar czvf ${LARGEFILES} /var/www/html/myplaceonline/tmp/myp/files/ && echo '${ENCRYPTED_FILE_PASSWORD}' | /usr/bin/gpg --batch --no-tty --passphrase-fd 0 --s2k-mode 3 --s2k-count 65536 --force-mdc --cipher-algo AES256 --s2k-digest-algo sha512 -o ${LARGEFILES}.pgp --symmetric ${LARGEFILES}; rm ${LARGEFILES}" &&
+scp root@myplaceonline.com:${LARGEFILES}.pgp ${OUTPUTDIR} && \
+ssh root@myplaceonline.com "rm -f ${LARGEFILES}.pgp" && \
+
+echo "Done"
