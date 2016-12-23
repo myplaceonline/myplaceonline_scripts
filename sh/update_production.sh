@@ -4,7 +4,7 @@ if [ $KEYSLOADED -lt 1 ]; then
   ssh-add
 fi
 pushd $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-pushd ../../myplaceonline_chefrepo
-knife ssh -e -C 1 "chef_environment:production AND role:web_server" "chef-client --force-logger" --ssh-user root --identity-file ~/.ssh/id_rsa
+pushd ../../myplaceonline_posixcubes
+../../../posixcube/posixcube.sh -u root -w ~/production.pwd -h web*.myplaceonline.com -o "cubevar_app_web_servers=web*" -c core_begin -c web -c core_end
 popd
 popd
