@@ -5,6 +5,6 @@ if [ $KEYSLOADED -lt 1 ]; then
 fi
 pushd $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 pushd ../../myplaceonline_posixcubes
-../../../posixcube/posixcube.sh -u root -w ~/production.pwd -h web*.myplaceonline.com -o "cubevar_app_web_servers=web*" -c core_begin -c web -c core_end
+../../../posixcube/posixcube.sh -u root -h web*.myplaceonline.com -o "cubevar_app_web_servers=web*" -c core_begin -c web -c core_end
 popd
 popd
